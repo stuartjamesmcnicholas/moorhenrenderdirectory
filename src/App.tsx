@@ -94,6 +94,7 @@ function App() {
 
     const [isCootAttached, setCootAttached] = useState(window.cootModule !== undefined);
     const [mc, setMc] = useState<MoleculesContainerJS|null>(null);
+    const [meshes, setMeshes] = useState<ArrayBuffer[]>([]);
 
     const handleCootAttached = useCallback(() => {
         if (window.cootModule !== undefined) {
@@ -108,7 +109,7 @@ function App() {
             window.cootModule.FS.mkdir("COOT_BACKUP")
             setMc(molecules_container)
         } else {
-            console.warn("Unable to locate coot module... Cannot start Lhasa.");
+            console.warn("Unable to locate coot module... Cannot start.");
         }
     }, []);
 
@@ -129,20 +130,42 @@ function App() {
         loadCootModule()
     }, []);
 
+    const downloadFile = (file: File, fileName: string) => {
+        const url = window.URL.createObjectURL(file);
+
+        const link = document.createElement("a");
+        if(link){
+            link.download = fileName;
+            link.href = url;
+            document.body.appendChild(link);
+            link.click();
+            if(link.parentNode) link.parentNode.removeChild(link);
+        }
+        window.URL.revokeObjectURL(url);
+    }
+
+    const doDownload = async() => {
+        console.log(meshes)
+        const fileName = "foo.glb"
+        const file = new File([meshes[0]], fileName, { type: "application/octet-stream" });
+        downloadFile(file,fileName)
+    }
+
     const handleClick = async(e: React.ChangeEvent<HTMLInputElement>) => {
+        const theseMeshes = []
         if(e.target.files&&mc){
             const files:File[] = [...e.target.files]
             for (const file of files) {
                 const t:string = await file.text()
                 const imol = mc.read_coords_string(t,file.name)
-                console.log(imol)
                 const fileName = file.name+".glb"
                 mc.export_molecular_representation_as_gltf(imol.first,"/*/*/*/*:*","","Ribbon",2,fileName)
-                const gltfData = window.cootModule.FS.readFile(fileName, { encoding: 'binary' }) as Uint8Array
+                const gltfData = window.cootModule.FS.readFile(fileName, { encoding: 'binary' }) as ArrayBuffer
                 window.cootModule.FS_unlink(fileName)
-                console.log(gltfData)
+                theseMeshes.push(gltfData)
             }
         }
+        setMeshes(theseMeshes)
     }
     
 
@@ -150,6 +173,7 @@ function App() {
       <>
       <div>Hello, World!!</div>
       {isCootAttached && <input type="file" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)} id="file-picker" name="fileList" webkitdirectory="true" multiple />}
+      {meshes.length>0 && <button onClick={() => doDownload()}>Download</button> }
       </>
     )
 }
