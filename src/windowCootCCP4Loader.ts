@@ -42,14 +42,7 @@ export const windowCootCCP4Loader = (src: string) => {
             .then(src => {
                 console.debug(src + " loaded 64-bit successfully.");
                 /* eslint-disable no-undef */
-                createCoot64Module({
-                    print(t) {
-                        console.debug(["output", t]);
-                    },
-                    printErr(t) {
-                        console.error(["output", t]);
-                    },
-                })
+                createCoot64Module()
                     .then(onModuleLoaded)
                     .catch(onModuleError);
             })
@@ -59,15 +52,7 @@ export const windowCootCCP4Loader = (src: string) => {
                 loadScript(`${src}/moorhen.js`).then(src => {
                     console.debug(src + " loaded 32-bit successfully (fallback).");
                     /* eslint-disable no-undef */
-                    createCootModule({
-                        /* eslint-enable no-undef */
-                        print(t) {
-                            console.debug(["output", t]);
-                        },
-                        printErr(t) {
-                            console.debug(["output", t]);
-                        },
-                    })
+                    createCootModule()
                         .then(onModuleLoaded)
                         .catch(onModuleError);
                 });
@@ -76,14 +61,7 @@ export const windowCootCCP4Loader = (src: string) => {
         loadScript(`${src}/moorhen.js`).then(src => {
             console.debug(src + " loaded 32-bit successfully.");
             /* eslint-disable no-undef */
-            createCootModule({
-                print(t) {
-                    console.debug(["output", t]);
-                },
-                printErr(t) {
-                    console.debug(["output", t]);
-                },
-            })
+            createCootModule()
                 .then(onModuleLoaded)
                 .catch(onModuleError);
         });
@@ -128,14 +106,7 @@ export const windowGemmiLoader = (src: string) => {
             .then(src => {
                 console.debug(src + " loaded 64-bit successfully.");
                 /* eslint-disable no-undef */
-                createGemmi64Module({
-                    print(t) {
-                        console.debug(["output", t]);
-                    },
-                    printErr(t) {
-                        console.error(["output", t]);
-                    },
-                })
+                createGemmi64Module()
                     .then(onModuleLoaded)
                     .catch(onModuleError);
             })
@@ -145,15 +116,7 @@ export const windowGemmiLoader = (src: string) => {
                 loadScript(`${src}/gemmi.js`).then(src => {
                     console.debug(src + " loaded 32-bit successfully (fallback).");
                     /* eslint-disable no-undef */
-                    createGemmiModule({
-                        /* eslint-enable no-undef */
-                        print(t) {
-                            console.debug(["output", t]);
-                        },
-                        printErr(t) {
-                            console.debug(["output", t]);
-                        },
-                    })
+                    createGemmiModule()
                         .then(onModuleLoaded)
                         .catch(onModuleError);
                 });
@@ -162,14 +125,7 @@ export const windowGemmiLoader = (src: string) => {
         loadScript(`${src}/gemmi.js`).then(src => {
             console.debug(src + " loaded 32-bit successfully.");
             /* eslint-disable no-undef */
-            createGemmiModule({
-                print(t) {
-                    console.debug(["output", t]);
-                },
-                printErr(t) {
-                    console.debug(["output", t]);
-                },
-            })
+            createGemmiModule()
                 .then(onModuleLoaded)
                 .catch(onModuleError);
         });
